@@ -10,6 +10,10 @@ const app = express();
 app.use(express.json());
 app.use(morgan('dev'));
 
+// Routes
+
+app.use('/api/auth', require('./routes/authRoutes'));
+
 app.get('/', (req, res) => {
     res.send('API is running...');
 });
