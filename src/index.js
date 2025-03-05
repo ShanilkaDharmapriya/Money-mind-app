@@ -17,6 +17,7 @@ app.use(morgan('dev'));
 
 app.use('/api/auth', authRoutes );
 app.use('/api/transactions', transactionRouts); 
+app.use('/api/budgets', require('./routes/budgetRoutes'));
 
 app.get('/', (req, res) => {
     res.send('API is running...');
