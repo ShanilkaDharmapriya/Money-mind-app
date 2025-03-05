@@ -1,4 +1,5 @@
 const Transaction=require ('../models/Transaction')
+const {autoSavings}=require('../controllers/goalController')
 
 exports.createTransaction=async (req,res) => {
     try{
@@ -13,8 +14,12 @@ exports.createTransaction=async (req,res) => {
             description,
 
         })
-        res.status(500).json(newTransaction)
-    }catch{
+        if (type === "income") {
+            await autoSavings(req.user.id, amount);
+        }
+        res.status(201).json(newTransaction);
+        
+    }catch(error){
         res.status(201).json({message:error.message})
     }
 }

@@ -18,11 +18,12 @@ app.use(morgan('dev'));
 app.use('/api/auth', authRoutes );
 app.use('/api/transactions', transactionRouts); 
 app.use('/api/budgets', require('./routes/budgetRoutes'));
-app.use('/api/reports', require('./routes/reportRoutes'))
+app.use('/api/reports', require('./routes/reportRoutes'));
+app.use('/api/goals', require('./routes/goalRoutes'));
 
 app.get('/', (req, res) => {
     res.send('API is running...');
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
