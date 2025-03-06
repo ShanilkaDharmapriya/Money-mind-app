@@ -25,7 +25,4 @@ router.put('/:id', authMiddleware, updateBudget);
 // Delete a budget
 router.delete('/:id', authMiddleware, deleteBudget);
 
-// Check if category or monthly budget exceeded
-router.get('/check/alerts', authMiddleware, checkBudget);
-
 module.exports = router;

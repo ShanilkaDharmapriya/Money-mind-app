@@ -20,6 +20,7 @@ app.use('/api/transactions', transactionRouts);
 app.use('/api/budgets', require('./routes/budgetRoutes'));
 app.use('/api/reports', require('./routes/reportRoutes'));
 app.use('/api/goals', require('./routes/goalRoutes'));
+app.use('/api/notifications', require('./routes/notificationRoutes'));
 
 app.get('/', (req, res) => {
     res.send('API is running...');
