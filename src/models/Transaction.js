@@ -7,7 +7,8 @@ const TransactionSchema = new mongoose.Schema({
     amount: { type: Number, required: true },
     date: { type: Date, default: Date.now },
     tags: [{ type: String }], 
-    description:{type:String}
+    description:{type:String},
+    currency: { type: String, default: "USD" }
 });
 
 module.exports = mongoose.model('Transaction', TransactionSchema);

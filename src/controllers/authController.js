@@ -5,8 +5,11 @@ const bcrypt = require('bcryptjs');
 
 exports.register = async (req, res) => {
     try {
-        const { username, email, password } = req.body;
-        const newUser = await User.create({ username, email, password });
+        const {  username,
+                 email,
+                 password,
+                 preferredCurrency} = req.body;
+        const newUser = await User.create({ username, email, password,preferredCurrency: preferredCurrency || "USD" });
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {  // ✅ Fix: Now `error` is defined
         console.error(error); // Logs the error in the terminal

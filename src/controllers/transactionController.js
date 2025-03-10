@@ -1,14 +1,22 @@
 const Transaction=require ('../models/Transaction')
 const {autoSavings}=require('../controllers/goalController')
+const { getExchangeRate } = require('../utils/currencyConverter');
+const User = require('../models/User'); 
 
 exports.createTransaction=async (req,res) => {
     try{
-        const {type,category,amount,date,tags,description}=req.body;
+        const {type,category,amount,date,tags,description,currency}=req.body;
+
+
+        let finalAmount = amount;
+        if (currency && currency !== "USD") {
+            finalAmount = await getExchangeRate(currency, "USD", amount);
+        }
         const newTransaction= await Transaction.create({
             user:req.user.id,
             type,
             category,
-            amount,
+            amount:finalAmount,
             date,
             tags,
             description,
@@ -24,14 +32,33 @@ exports.createTransaction=async (req,res) => {
     }
 }
 
-exports.getTransaction=async(req,res)=>{
+/*exports.getTransaction=async(req,res)=>{
     try{
         const transaction=await Transaction.find({user:req.user.id}).sort({date:-1})
         res.json(transaction)
     }catch(error){
         res.status(500).json({message:error.message})
     }
-}
+}*/
+
+exports.getTransaction = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        const userCurrency = user.preferredCurrency;
+
+        const transactions = await Transaction.find({ user: req.user.id }).sort({date:-1});
+
+        const convertedTransactions = await Promise.all(transactions.map(async (transaction) => {
+            if (transaction.currency !== userCurrency) {
+                transaction.amount = await getExchangeRate(transaction.currency, userCurrency, transaction.amount);
+                transaction.currency = userCurrency;
+            }
+            return transaction;
+        })); res.json(convertedTransactions);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 exports.getTransactionById=async (req,res) => {
     try{

@@ -21,6 +21,7 @@ app.use('/api/budgets', require('./routes/budgetRoutes'));
 app.use('/api/reports', require('./routes/reportRoutes'));
 app.use('/api/goals', require('./routes/goalRoutes'));
 app.use('/api/notifications', require('./routes/notificationRoutes'));
+app.use('/api/currencys', require('./routes/currencyRoutes'));
 
 app.get('/', (req, res) => {
     res.send('API is running...');
