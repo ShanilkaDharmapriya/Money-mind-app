@@ -5,6 +5,7 @@ const UserSchema =new mongoose.Schema({
     username:{type:String,required:true,unique:true},
     email:{type:String,required:true,unique:true},
     password:{type:String,required:true},
+    preferredCurrency: { type: String, default: "USD" },
     role:{type:String,enum:['user','admin'],default:'user'}
 })
 
