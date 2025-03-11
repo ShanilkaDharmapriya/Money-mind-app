@@ -9,14 +9,15 @@ exports.register = async (req, res) => {
 
         const userExists = await User.findOne({ email });
             if (userExists) {
-                 return res.status(400).json({ message: "User already exists" });
+                 return res.status(400).json({ message:"User already exists" });
             }
+
 
         const newUser = await User.create({ 
             username,                                
             email,
             password,                           
-            preferredCurrency: preferredCurrency || "USD",                                 
+            preferredCurrency: preferredCurrency ||"USD",                                 
             role: role || "user" 
         });
 
@@ -25,6 +26,12 @@ exports.register = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+
+
+
+
+
 
 exports.login=async(req,res)=>{
     try{

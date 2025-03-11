@@ -8,11 +8,10 @@ exports.getDashboard = async (req, res) => {
         const user = await User.findById(req.user.id);
 
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({ message:"User not found" });
         }
 
         if (user.role === "admin") {
-            // ✅ Admin Dashboard
             const users = await User.countDocuments();
             const transactions = await Transaction.countDocuments();
             const totalIncome = await Transaction.aggregate([
@@ -33,7 +32,6 @@ exports.getDashboard = async (req, res) => {
                 message: "Admin Dashboard Data"
             });
         } else {
-            // ✅ Regular User Dashboard
             const transactions = await Transaction.find({ user: req.user.id }).sort({ date: -1 }).limit(5);
             const totalIncome = await Transaction.aggregate([
                 { $match: { user: req.user.id, type: "income" } },
@@ -53,10 +51,10 @@ exports.getDashboard = async (req, res) => {
                 recentTransactions: transactions,
                 goals,
                 budgets,
-                message: "User Dashboard Data"
+                message:"User Dashboard Data"
             });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({message: error.message });
     }
 };

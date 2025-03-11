@@ -29,6 +29,9 @@ exports.getBudgets=async (req,res) => {
     }
 }
 
+
+
+
 exports.getBudgetById=async (req,res) => {
     try{
         const budget=await Budget.findById(req.params.id)

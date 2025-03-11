@@ -8,7 +8,6 @@ exports.createTransaction = async (req, res) => {
         try {
             const { type, category, amount, date, tags, description, currency } = req.body;
     
-            // ✅ Get the user's preferred currency
             const user = await User.findById(req.user.id);
             if (!user) {
                 return res.status(404).json({ message: "User not found" });
@@ -16,26 +15,23 @@ exports.createTransaction = async (req, res) => {
             const userCurrency = user.preferredCurrency || "USD";
     
             let finalAmount = amount;
-            let transactionCurrency = userCurrency; // ✅ Always save transactions in the user's preferred currency
+            let transactionCurrency = userCurrency; 
     
-            // ✅ Convert the transaction amount to the user's preferred currency before saving
             if (currency && currency !== userCurrency) {
                 finalAmount = await getExchangeRate(currency, userCurrency, amount);
             }
     
-            // ✅ Save the transaction with the converted amount
             const newTransaction = await Transaction.create({
                 user: req.user.id,
                 type,
                 category,
-                amount: finalAmount, // ✅ Stored in the user's preferred currency
-                currency: userCurrency, // ✅ Always store in the user's currency
+                amount: finalAmount, 
+                currency: userCurrency, 
                 date,
                 tags,
                 description
             });
     
-            // ✅ Auto-savings should use the converted amount
             if (type === "income") {
                 await autoSavings(req.user.id, finalAmount);
             }
