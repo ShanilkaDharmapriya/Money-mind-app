@@ -3,34 +3,48 @@ const {autoSavings}=require('../controllers/goalController')
 const { getExchangeRate } = require('../utils/currencyConverter');
 const User = require('../models/User'); 
 
-exports.createTransaction=async (req,res) => {
-    try{
-        const {type,category,amount,date,tags,description,currency}=req.body;
 
-
-        let finalAmount = amount;
-        if (currency && currency !== "USD") {
-            finalAmount = await getExchangeRate(currency, "USD", amount);
+exports.createTransaction = async (req, res) => {
+        try {
+            const { type, category, amount, date, tags, description, currency } = req.body;
+    
+            // ✅ Get the user's preferred currency
+            const user = await User.findById(req.user.id);
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
+            const userCurrency = user.preferredCurrency || "USD";
+    
+            let finalAmount = amount;
+            let transactionCurrency = userCurrency; // ✅ Always save transactions in the user's preferred currency
+    
+            // ✅ Convert the transaction amount to the user's preferred currency before saving
+            if (currency && currency !== userCurrency) {
+                finalAmount = await getExchangeRate(currency, userCurrency, amount);
+            }
+    
+            // ✅ Save the transaction with the converted amount
+            const newTransaction = await Transaction.create({
+                user: req.user.id,
+                type,
+                category,
+                amount: finalAmount, // ✅ Stored in the user's preferred currency
+                currency: userCurrency, // ✅ Always store in the user's currency
+                date,
+                tags,
+                description
+            });
+    
+            // ✅ Auto-savings should use the converted amount
+            if (type === "income") {
+                await autoSavings(req.user.id, finalAmount);
+            }
+    
+            res.status(201).json(newTransaction);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
         }
-        const newTransaction= await Transaction.create({
-            user:req.user.id,
-            type,
-            category,
-            amount:finalAmount,
-            date,
-            tags,
-            description,
-
-        })
-        if (type === "income") {
-            await autoSavings(req.user.id, amount);
-        }
-        res.status(201).json(newTransaction);
-        
-    }catch(error){
-        res.status(201).json({message:error.message})
-    }
-}
+    };
 
 /*exports.getTransaction=async(req,res)=>{
     try{
