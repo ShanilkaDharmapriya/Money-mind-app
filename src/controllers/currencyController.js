@@ -5,7 +5,7 @@ exports.convertCurrency = async (req, res) => {
         const { fromCurrency, toCurrency, amount } = req.body;
 
         if (!fromCurrency || !toCurrency || !amount) {
-            return res.status(400).json({ message: "All fields are required" });
+            return res.status(400).json({ message:"all fields are required" });
         }
 
         const convertedAmount = await getExchangeRate(fromCurrency, toCurrency, amount);

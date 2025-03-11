@@ -4,7 +4,6 @@ const {authMiddleware}=require('../middleware/authMiddleware')
 
 const router = express.Router();
 
-// ✅ Convert Amount Between Currencies
 router.post('/convert',authMiddleware, convertCurrency);
 
 module.exports = router;

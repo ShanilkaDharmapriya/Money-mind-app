@@ -7,7 +7,6 @@ const {getSpendingReport,
 const router=express.Router()
 
 router.get('/spending',authMiddleware,getSpendingReport)
-
 router.get('/income-expense',authMiddleware,getIncomeVsExpense)
 
 module.exports=router;

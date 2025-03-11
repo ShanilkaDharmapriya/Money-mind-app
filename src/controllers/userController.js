@@ -5,7 +5,7 @@ exports.updatePreferredCurrency = async (req, res) => {
         const { currency } = req.body;
 
         if (!currency) {
-            return res.status(400).json({ message: "Currency is required" });
+            return res.status(400).json({ message: "Currecy is required" });
         }
 
         await User.findByIdAndUpdate(req.user.id, { preferredCurrency: currency });

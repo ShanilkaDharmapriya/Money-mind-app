@@ -29,10 +29,25 @@ exports.getSpendingReport=async (req,res) => {
 exports.getIncomeVsExpense = async (req, res) => {
     try {
         const { startDate, endDate } = req.query;
+
+        if (!startDate || !endDate) {
+            return res.status(400).json({ message: "Start and end dates are required" });
+        }
+
         const start = new Date(startDate);
         const end = new Date(endDate);
 
+        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+            return res.status(400).json({ message: "Invalid date format" });
+        }
+
+        if (!mongoose.Types.ObjectId.isValid(req.user.id)) {
+            return res.status(400).json({ message: "Invalid user ID" });
+        }
+
         const userId = new mongoose.Types.ObjectId(req.user.id);
+
+        console.log("Fetching transactions for:", userId, start, end);
 
         const income = await Transaction.aggregate([
             { $match: { user: userId, type: "income", date: { $gte: start, $lte: end } } },
@@ -44,19 +59,19 @@ exports.getIncomeVsExpense = async (req, res) => {
             { $group: { _id: null, totalExpenses: { $sum: "$amount" } } }
         ]);
 
-        res.json({
-            chartData: {
-                labels: ["Time"],
-                income: [income.length > 0 ? income[0].totalIncome : 0],
-                expenses: [expenses.length > 0 ? expenses[0].totalExpenses : 0]
-            }
+        console.log("Income data:", income);
+        console.log("Expense data:", expenses); 
+
+        res.status(200).json({
+            totalIncome: income.length > 0 ? income[0].totalIncome : 0,
+            totalExpenses: expenses.length > 0 ? expenses[0].totalExpenses : 0
         });
 
+
+
+        
     } catch (error) {
+        console.error("Error in getIncomeVsExpense:", error); 
         res.status(500).json({ message: error.message });
     }
 };
-
-
-
-    

@@ -12,6 +12,13 @@ const app = express();
 app.use(express.json());
 app.use(morgan('dev'));
 
+if (process.env.NODE_ENV !== "test") {
+    const PORT = process.env.PORT || 5000;
+    const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    module.exports = { app, server };
+} else {
+    module.exports = { app };
+}
 
 // Routes
 
@@ -22,10 +29,10 @@ app.use('/api/reports', require('./routes/reportRoutes'));
 app.use('/api/goals', require('./routes/goalRoutes'));
 app.use('/api/notifications', require('./routes/notificationRoutes'));
 app.use('/api/currencys', require('./routes/currencyRoutes'));
+app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 
 app.get('/', (req, res) => {
     res.send('API is running...');
 });
 
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+

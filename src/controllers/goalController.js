@@ -13,10 +13,9 @@ exports.createGoal=async (req,res) => {
             deadline,
             autoSavePercentage
         })
-        res.json(goal)
-
-    }catch(error){
-        res.status(200).json({message:error.message})
+        res.status(201).json(goal);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 }
 
@@ -65,14 +64,19 @@ exports.autoSavings = async (userId, incomeAmount) => {
     }
 };
 
+
+
+
+
+
 exports.deleteGoal = async (req, res) => {
     try {
         const goal = await Goal.findById(req.params.id);
         if (!goal || goal.user.toString() !== req.user.id)
-            return res.status(404).json({ message: 'Goal not found' });
+            return res.status(404).json({ message: 'Goa not found' });
 
         await goal.deleteOne();
-        res.json({ message: 'Goal deleted successfully' });
+        res.json({ message: 'goal deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
