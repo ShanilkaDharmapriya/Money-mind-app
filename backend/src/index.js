@@ -5,6 +5,8 @@ const morgan = require('morgan');
 const authRoutes = require('./routes/authRoutes')
 const  transactionRouts = require('./routes/transactionRouts')
 
+require('dotenv').config();
+
 dotenv.config();
 connectDB();
 
