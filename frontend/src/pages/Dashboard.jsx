@@ -347,7 +347,7 @@ const Dashboard = ({ onToggleColorMode, mode }) => {
           </ListItemIcon>
           <ListItemText primary="Transactions" />
         </ListItem>
-        <ListItem>
+        <ListItem button component={RouterLink} to="/goals">
           <ListItemIcon>
             <SavingsIcon />
           </ListItemIcon>
