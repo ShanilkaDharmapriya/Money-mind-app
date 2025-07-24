@@ -14,6 +14,7 @@ import { TransactionProvider } from './contexts/TransactionContext';
 import { GoalProvider } from './contexts/GoalContext';
 import { useState, useMemo } from 'react';
 import { useAuth } from './contexts/AuthContext';
+import Landing from './pages/Landing';
 
 // Create theme instances for light and dark modes
 const getTheme = (mode) => createTheme({
@@ -197,7 +198,10 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                <Route
+                  path="/"
+                  element={user ? <Navigate to="/dashboard" replace /> : <Landing />} 
+                />
               </Routes>
             </Router>
           </GoalProvider>
