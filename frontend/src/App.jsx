@@ -7,7 +7,14 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Transactions from './pages/Transactions';
+import Goals from './pages/Goals';
+import Layout from './components/Layout';
+import { AuthProvider } from './contexts/AuthContext';
+import { TransactionProvider } from './contexts/TransactionContext';
+import { GoalProvider } from './contexts/GoalContext';
 import { useState, useMemo } from 'react';
+import { useAuth } from './contexts/AuthContext';
+import Landing from './pages/Landing';
 
 // Create theme instances for light and dark modes
 const getTheme = (mode) => createTheme({
@@ -137,6 +144,7 @@ function App() {
   });
 
   const theme = useMemo(() => getTheme(mode), [mode]);
+  const { user } = useAuth ? useAuth() : { user: null };
 
   const toggleColorMode = () => {
     const newMode = mode === 'light' ? 'dark' : 'light';
@@ -147,33 +155,58 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <ErrorBoundary>
-                  <Dashboard onToggleColorMode={toggleColorMode} mode={mode} />
-                </ErrorBoundary>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/transactions"
-            element={
-              <ProtectedRoute>
-                <ErrorBoundary>
-                  <Transactions onToggleColorMode={toggleColorMode} mode={mode} />
-                </ErrorBoundary>
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
-      </Router>
+      <AuthProvider>
+        <TransactionProvider>
+          <GoalProvider>
+            <Router>
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route
+                  path="/dashboard"
+                  element={
+                    <ProtectedRoute>
+                      <Layout onToggleColorMode={toggleColorMode} mode={mode} user={user}>
+                        <ErrorBoundary>
+                          <Dashboard />
+                        </ErrorBoundary>
+                      </Layout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/transactions"
+                  element={
+                    <ProtectedRoute>
+                      <Layout onToggleColorMode={toggleColorMode} mode={mode} user={user}>
+                        <ErrorBoundary>
+                          <Transactions />
+                        </ErrorBoundary>
+                      </Layout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/goals"
+                  element={
+                    <ProtectedRoute>
+                      <Layout onToggleColorMode={toggleColorMode} mode={mode} user={user}>
+                        <ErrorBoundary>
+                          <Goals />
+                        </ErrorBoundary>
+                      </Layout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/"
+                  element={user ? <Navigate to="/dashboard" replace /> : <Landing />} 
+                />
+              </Routes>
+            </Router>
+          </GoalProvider>
+        </TransactionProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }
