@@ -19,6 +19,8 @@ import {
   Card,
   CardContent,
   CardActions,
+  Skeleton,
+  CircularProgress,
 } from '@mui/material';
 import {
   Edit as EditIcon,
@@ -34,7 +36,7 @@ import { useState } from 'react';
 import { useTransactions } from '../contexts/TransactionContext';
 import TransactionForm from './TransactionForm';
 
-const TransactionList = ({ transactions }) => {
+const TransactionList = ({ transactions, loading = false }) => {
   const theme = useTheme();
   const { deleteTransaction } = useTransactions();
   const [editingTransaction, setEditingTransaction] = useState(null);
@@ -99,13 +101,35 @@ const TransactionList = ({ transactions }) => {
 
   return (
     <>
-      <AnimatePresence>
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="show"
-        >
-          {transactions.map((transaction) => (
+      {loading ? (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {[1, 2, 3].map((index) => (
+            <Card key={index} sx={{ mb: 2, borderRadius: 3 }}>
+              <CardContent sx={{ p: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Skeleton variant="circular" width={56} height={56} />
+                  <Box sx={{ flex: 1 }}>
+                    <Skeleton variant="text" width="60%" height={32} />
+                    <Skeleton variant="text" width="40%" height={24} />
+                    <Skeleton variant="text" width="30%" height={20} />
+                  </Box>
+                  <Box sx={{ textAlign: 'right' }}>
+                    <Skeleton variant="text" width={80} height={32} />
+                    <Skeleton variant="text" width={60} height={20} />
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
+          ))}
+        </Box>
+      ) : (
+        <AnimatePresence>
+          <motion.div
+            variants={container}
+            initial="hidden"
+            animate="show"
+          >
+            {transactions.map((transaction) => (
             <motion.div key={transaction._id} variants={item}>
               <Card
                 sx={{
@@ -277,6 +301,7 @@ const TransactionList = ({ transactions }) => {
           ))}
         </motion.div>
       </AnimatePresence>
+      )}
 
       <TransactionForm
         open={!!editingTransaction}
