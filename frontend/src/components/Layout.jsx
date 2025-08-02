@@ -37,6 +37,7 @@ const navItems = [
   { label: 'Dashboard', icon: <DashboardIcon />, to: '/dashboard' },
   { label: 'Transactions', icon: <AccountBalanceIcon />, to: '/transactions' },
   { label: 'Goals', icon: <SavingsIcon />, to: '/goals' },
+  { label: 'Budgets', icon: <CategoryIcon />, to: '/budgets' },
   { label: 'Reports', icon: <AssessmentIcon />, to: '/reports' },
   { label: 'Calendar', icon: <CalendarIcon />, to: '/calendar' },
   { label: 'Categories', icon: <CategoryIcon />, to: '/categories' },

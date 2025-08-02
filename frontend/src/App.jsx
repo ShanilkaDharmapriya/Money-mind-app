@@ -12,6 +12,8 @@ import Layout from './components/Layout';
 import { AuthProvider } from './contexts/AuthContext';
 import { TransactionProvider } from './contexts/TransactionContext';
 import { GoalProvider } from './contexts/GoalContext';
+import Budgets from './pages/Budgets';
+import { BudgetProvider } from './contexts/BudgetContext';
 import { useState, useMemo } from 'react';
 import { useAuth } from './contexts/AuthContext';
 import Landing from './pages/Landing';
@@ -158,52 +160,66 @@ function App() {
       <AuthProvider>
         <TransactionProvider>
           <GoalProvider>
-            <Router>
-              <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route
-                  path="/dashboard"
-                  element={
-                    <ProtectedRoute>
-                      <Layout onToggleColorMode={toggleColorMode} mode={mode} user={user}>
-                        <ErrorBoundary>
-                          <Dashboard />
-                        </ErrorBoundary>
-                      </Layout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/transactions"
-                  element={
-                    <ProtectedRoute>
-                      <Layout onToggleColorMode={toggleColorMode} mode={mode} user={user}>
-                        <ErrorBoundary>
-                          <Transactions />
-                        </ErrorBoundary>
-                      </Layout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/goals"
-                  element={
-                    <ProtectedRoute>
-                      <Layout onToggleColorMode={toggleColorMode} mode={mode} user={user}>
-                        <ErrorBoundary>
-                          <Goals />
-                        </ErrorBoundary>
-                      </Layout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/"
-                  element={user ? <Navigate to="/dashboard" replace /> : <Landing />} 
-                />
-              </Routes>
-            </Router>
+            <BudgetProvider>
+              <Router>
+                <Routes>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <ProtectedRoute>
+                        <Layout onToggleColorMode={toggleColorMode} mode={mode} user={user}>
+                          <ErrorBoundary>
+                            <Dashboard />
+                          </ErrorBoundary>
+                        </Layout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/transactions"
+                    element={
+                      <ProtectedRoute>
+                        <Layout onToggleColorMode={toggleColorMode} mode={mode} user={user}>
+                          <ErrorBoundary>
+                            <Transactions />
+                          </ErrorBoundary>
+                        </Layout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/goals"
+                    element={
+                      <ProtectedRoute>
+                        <Layout onToggleColorMode={toggleColorMode} mode={mode} user={user}>
+                          <ErrorBoundary>
+                            <Goals />
+                          </ErrorBoundary>
+                        </Layout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/budgets"
+                    element={
+                      <ProtectedRoute>
+                        <Layout onToggleColorMode={toggleColorMode} mode={mode} user={user}>
+                          <ErrorBoundary>
+                            <Budgets />
+                          </ErrorBoundary>
+                        </Layout>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/"
+                    element={user ? <Navigate to="/dashboard" replace /> : <Landing />} 
+                  />
+                </Routes>
+              </Router>
+            </BudgetProvider>
           </GoalProvider>
         </TransactionProvider>
       </AuthProvider>

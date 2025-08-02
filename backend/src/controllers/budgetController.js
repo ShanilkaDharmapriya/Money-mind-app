@@ -36,7 +36,7 @@ exports.getBudgetById=async (req,res) => {
     try{
         const budget=await Budget.findById(req.params.id)
         if(!budget ||budget.user.toString() !== req.user.id)
-            res.status(404).json({message:'budget not found'})
+            return res.status(404).json({message:'budget not found'})
 
         res.json(budget)
     }catch(error){
@@ -61,7 +61,7 @@ exports.deleteBudget=async(req,res)=>{
         const budget=await Budget.findById(req.params.id)
         if (!budget || budget.user.toString() !== req.user.id)
             return res.status(404).json({ message: 'Budget not found' });
-        budget.deleteOne()
+        await budget.deleteOne()
         res.json({message:'budget deleted'})
 
     } catch (error) {
